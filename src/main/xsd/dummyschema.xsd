@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="gexf" type="gexf-content"/>
+  <xs:complexType name="gexf-content">
+    <xs:annotation>
+      <xs:documentation>Tree</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="meta"/>
+      <xs:element ref="graph"/>
+    </xs:sequence>
+    <xs:attribute name="version" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="1.2"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="variant" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="meta" type="meta-content"/>
+  <xs:element name="graph" type="graph-content"/>
+  <xs:complexType name="meta-content">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="creator"/>
+      <xs:element ref="keywords"/>
+      <xs:element ref="description"/>
+    </xs:choice>
+    <xs:attribute name="lastmodifieddate" type="xs:date"/>
+  </xs:complexType>
+  <xs:element name="creator" type="xs:string"/>
+  <xs:element name="keywords" type="xs:string"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:complexType name="nodes-content">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="node"/>
+    </xs:sequence>
+    <xs:attribute name="count" type="xs:nonNegativeInteger"/>
+  </xs:complexType>
+  <xs:element name="node" type="node-content"/>
+  <xs:complexType name="edges-content">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="edge"/>
+    </xs:sequence>
+    <xs:attribute name="count" type="xs:nonNegativeInteger"/>
+  </xs:complexType>
+  <xs:element name="edge" type="edge-content"/>
+  <xs:simpleType name="defaultedgetype-type">
+    <xs:annotation>
+      <xs:documentation>Datatypes</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="directed"/>
+      <xs:enumeration value="undirected"/>
+      <xs:enumeration value="mutual"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="edgetype-type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="directed"/>
+      <xs:enumeration value="undirected"/>
+      <xs:enumeration value="mutual"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="id-type">
+    <xs:union memberTypes="xs:string xs:integer"/>
+  </xs:simpleType>
+  <xs:simpleType name="idtype-type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="integer"/>
+      <xs:enumeration value="string"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="mode-type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="static"/>
+      <xs:enumeration value="dynamic"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="weight-type">
+    <xs:restriction base="xs:float"/>
+  </xs:simpleType>
+</xs:schema>

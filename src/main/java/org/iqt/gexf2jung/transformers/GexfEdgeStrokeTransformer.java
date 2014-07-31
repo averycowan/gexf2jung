@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Avery Cowan.
+ * Copyright 2014 In-Q-Tel/Lab41.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public class GexfEdgeStrokeTransformer implements Transformer<Edge, Stroke> {
 
     @Override
     public Stroke transform(Edge e) {
-        float weight = e.getWeight();
+        float weight = e.getThickness();
         if (e.getStroke() == null || e.getStroke().equals("solid")) {
             return new BasicStroke(weight);
         }

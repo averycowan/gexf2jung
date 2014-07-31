@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Avery Cowan.
+ * Copyright 2014 In-Q-Tel/Lab41.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class GexfReader extends DefaultHandler {
 
     private EdgeType et = EdgeType.UNDIRECTED;
     private ArrayList<String> lines = new ArrayList<String>();
-    private Graph<Node, Edge> g = new SparseMultigraph<Node, Edge>();
+    private Graph<Node, Edge> graph = new SparseMultigraph<Node, Edge>();
     private Node cnode = null;
     private Edge cedge = null;
     private HashMap<String, Node> nodes = new HashMap<String, Node>();
@@ -82,7 +82,7 @@ public class GexfReader extends DefaultHandler {
      * @return
      */
     private Graph<Node, Edge> getGraph() {
-        return g;
+        return graph;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class GexfReader extends DefaultHandler {
             throws SAXException {
         if (qName.equals("graph")) {
             if (atts.getValue("defaultedgetype") != null) {
-                et = Edge.edgeType(atts.getValue("defaultedgetype").toUpperCase());
+                et = Edge.edgeType(atts.getValue("defaultedgetype"));
             }
         } else if (qName.equals("attributes")) {
             if (atts.getValue("class") == null) {
@@ -136,7 +136,7 @@ public class GexfReader extends DefaultHandler {
         } else if (qName.startsWith("viz:")) {
             if (attclass == AttClass.Node) {
                 if (localName.equals("color")) {
-                    int r = 0, g = 0, b = 0, a = 0;
+                    int r, g, b, a;
                     if (atts.getValue("r") == null) {
                         throw new MissingDataValueException("The \"r\" value in viz:color is missing");
                     }
@@ -179,25 +179,84 @@ public class GexfReader extends DefaultHandler {
                     cnode.setShape(atts.getValue("value"));
                 }
             } else if (attclass == AttClass.Edge) {
-
+                if(localName.equals("color")){
+                    int r, g, b, a;
+                    if (atts.getValue("r") == null) {
+                        throw new MissingDataValueException("The \"r\" value in viz:color is missing.");
+                    }
+                    if (atts.getValue("g") == null) {
+                        throw new MissingDataValueException("The \"g\" value in viz:color is missing.");
+                    }
+                    if (atts.getValue("b") == null) {
+                        throw new MissingDataValueException("The \"b\" value in viz:color is missing.");
+                    }
+                    try {
+                        r = Integer.parseInt(atts.getValue("r"));
+                    } catch (NumberFormatException e) {
+                        throw new InvalidDataValueException("The \"r\" value in viz:color is not an integer.");
+                    }
+                    try {
+                        g = Integer.parseInt(atts.getValue("g"));
+                    } catch (NumberFormatException e) {
+                        throw new InvalidDataValueException("The \"g\" value in viz:color is not an integer.");
+                    }
+                    try {
+                        b = Integer.parseInt(atts.getValue("b"));
+                    } catch (NumberFormatException e) {
+                        throw new InvalidDataValueException("The \"b\" value in viz:color is not an integer.");
+                    }
+                    if (atts.getValue("a") == null) {
+                        cedge.setColor(new Color(r, g, b));
+                    } else {
+                        try {
+                            a = (int) (Float.parseFloat(atts.getValue("a")) * 255);
+                            cedge.setColor(new Color(r, g, b, a));
+                        } catch (NumberFormatException e) {
+                            throw new InvalidDataValueException("The \"a\" value in viz:color is not a float.");
+                        }
+                    }
+                } else if(localName.equals("thickness")){
+                    if(atts.getValue("value")==null)
+                        throw new MissingDataValueException("The value in viz:thickness is missing.");
+                    try {
+                        float w = Float.parseFloat(atts.getValue("value"));
+                        if (w < 0) 
+                            throw new InvalidDataValueException("Edge thickness must be >= 0. Value was " + w + ".");
+                        cedge.setWeight(w);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidDataValueException("The  value in viz:thickness is not a float.");
+                    }
+                } else if (localName.equals("shape")) {
+                    if(atts.getValue("value")==null)
+                        throw new MissingDataValueException("The value in viz:shape is missing.");
+                    String s = atts.getValue("value");
+                    if(!(s.equals("solid") || s.equals("dotted") || s.equals("dashed")))
+                        throw new InvalidDataValueException("Edge shape "+s+" is not allowed. Must be solid, dotted or dashed.");
+                    cedge.setStroke(s);
+                }
             }
         } else if (qName.equals("node")) {
             attclass = AttClass.Node;
+            if(atts.getValue("id")==null)
+                throw new MissingDataValueException("Data value \"id\" for node is missing.");
             Node n = new Node(atts.getValue("id"));
             n.setLabel(atts.getValue("label"));
-            g.addVertex(n);
+            graph.addVertex(n);
             nodes.put(atts.getValue("id"), n);
             cnode = n;
         } else if (qName.equals("edge")) {
             attclass = AttClass.Edge;
-            Edge e = new Edge(atts.getValue("id"));
-            if (atts.getValue("weight") != null) {
-                if (Float.parseFloat(atts.getValue("weight")) < 0) {
-                    throw new InvalidDataValueException("Edge weight must be >= 0.Value was " + atts.getValue("weight") + ".");
-                }
-                e.setWeight(Float.parseFloat(atts.getValue("weight")));
-            }
-            g.addEdge(e, nodes.get(atts.getValue("source")), nodes.get(atts.getValue("target")), et);
+            if(atts.getValue("id")==null)
+                throw new MissingDataValueException("Data value \"id\" for edge is missing.");
+            if(atts.getValue("source")==null)
+                throw new MissingDataValueException("Data value \"source\" for edge is missing.");
+            if(atts.getValue("target")==null)
+                throw new MissingDataValueException("Data value \"target\" for edge is missing.");
+            EdgeType type = et;
+            if(atts.getValue("type")!=null)
+                type = Edge.edgeType(atts.getValue("type"));
+            Edge e = new Edge(atts.getValue("id"), type);
+            graph.addEdge(e, nodes.get(atts.getValue("source")), nodes.get(atts.getValue("target")), et);
             cedge = e;
         }
     }

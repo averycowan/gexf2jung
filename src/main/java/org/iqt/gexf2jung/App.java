@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Avery Cowan.
+ /*
+ * Copyright 2014 In-Q-Tel/Lab41.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class App {
      * @see run(java.lang.String)
      */
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException{
-        run("data/viz.gexf");
+        run("data/sampleData.gexf");
     }
     /**
      * Easy access method for <code>run(String filename, int width, int height, int x, int y)</code>. Puts the window at 0,0 with size 2560,1300.
@@ -64,7 +64,7 @@ public class App {
      */
     public static void run(String filename, int width, int height, int x, int y) throws ParserConfigurationException, SAXException, IOException{
         Graph<Node, Edge> g = GexfReader.read(filename);
-        Layout<Node, Edge> layout = new FRLayout2<Node, Edge>(g);
+        Layout<Node, Edge> layout = new CircleLayout<Node, Edge>(g);
         layout.setSize(new Dimension(width, height)); // sets the initial size of the space
         // The BasicVisualizationServer<V,E> is parameterized by the edge types
         BasicVisualizationServer<Node, Edge> vv

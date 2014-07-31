@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Avery Cowan.
+ * Copyright 2014 In-Q-Tel/Lab41.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,9 @@ public class Node {
         id = i;
     }
     
+    /**
+     * @return the former label.
+     */
     public String setLabel(String str){
         String s = label;
         label = str;
@@ -54,15 +57,25 @@ public class Node {
         return id;
     }
     
+    /**
+     * @return a HaphMap of the attribute values saved by id
+     */
     public HashMap<String, Attribute> getAttValues(){
         return attvalues;
     }
     
+    /**
+     * Adds an attribute value to the <code>HashMap</code>.
+     * @param i the ID of the attribute
+     * @param a the attribute object.
+     */
     public void addAtt(String i, Attribute a){
         attvalues.put(i, a);
     }
     
-    
+    /**
+     * @return the former color.
+     */
     public Color setColor(Color c){
         Color temp = color;
         color = c;
@@ -73,6 +86,9 @@ public class Node {
         return color;
     }
     
+    /**
+     * @return the former position.
+     */
     public Point3D setPosition(Point3D p){
         Point3D temp = position;
         position = p;
@@ -83,6 +99,9 @@ public class Node {
         return position;
     }
     
+    /**
+     * @return the former size.
+     */
     public float setSize(float s){
         float temp = size;
         size = s;
@@ -93,6 +112,9 @@ public class Node {
         return size;
     }
     
+    /**
+     * @return the former shape.
+     */
     public String setShape(String s){
         String temp = shape;
         shape = s;
@@ -107,6 +129,7 @@ public class Node {
         return spells;
     }
     
+    @Override
     public String toString(){
         return getClass().getSimpleName()+"[id:"+id+", label:"+label+", attributes:"+attvalues.toString()+"]";
     }

@@ -17,10 +17,10 @@
 package org.iqt.gexf2jung.exception;
 
 /**
- *
+ * This is thrown to signify the attributes tag does not have a class or an attribute/attribute definition came before an attributes tag and therefore does not know it's class.
  * @author Avery Cowan
  */
-public class NoAttributeClassException extends GexfParseException {
+public class NoAttributeClassException extends MissingDataValueException {
 
     /**
      * Creates a new instance of <code>NoAttributeClassDefined</code> without

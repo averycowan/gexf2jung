@@ -17,7 +17,7 @@
 package org.iqt.gexf2jung;
 
 /**
- *
+ * An <code>Attribute</code> represents an attribute value. It is used in a <code>HashMap</code> by Nodes and Edges. It has an ID that points to an <code>AttDef</code>.
  * @author Avery Cowan
  */
 public class Attribute {

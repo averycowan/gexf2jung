@@ -22,11 +22,12 @@ import org.apache.commons.collections15.Transformer;
 import org.iqt.gexf2jung.Node;
 
 /**
- *
+ * This Transformer returns <code>Node.getColor()</code>. If that is null it return <code>java.awt.Color.RED</code>.
  * @author Avery Cowan
  */
 public class GexfNodePaintTransformer implements Transformer<Node, Paint> {
 
+    @Override
     public Paint transform(Node n) {
         if (n.getColor() == null) {
             return Color.RED;

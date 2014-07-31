@@ -23,6 +23,7 @@ import java.awt.geom.Rectangle2D;
 import javafx.geometry.Point3D;
 import org.apache.commons.collections15.Transformer;
 import org.iqt.gexf2jung.Node;
+import org.iqt.gexf2jung.exception.InvalidDataValueException;
 
 /**
  *
@@ -55,6 +56,8 @@ public class GexfNodeShapeTransformer implements Transformer<Node, Shape> {
             p.addPoint((int) (position.getX()), (int) (position.getY() + size / 2));
             shape = p;
         }
+        else
+            throw new InvalidDataValueException("Node type "+n.getShape()+" is not allowed. Must be disk, square, triangle or diamond.");
         return shape;
     }
 }

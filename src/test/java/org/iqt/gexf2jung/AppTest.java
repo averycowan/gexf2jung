@@ -27,29 +27,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Unit test for simple App.
+ * JUnit test for app gexf2jung.
  */
 public class AppTest
 {
-
-//    /**
-//     * Rigourous Test :-)
-//     */
-//    @Test
-//    public void testApp() throws ParserConfigurationException, SAXException, IOException, InterruptedException
-//    {
-//        App.run("data/celegans.gexf"  , 640, 640,    0,   0);
-//        App.run("data/viz.gexf"       , 640, 640,  640,   0);
-//        App.run("data/yeast.gexf"     , 640, 640, 1280,   0);
-//        App.run("data/attrsample.gexf", 640, 640, 1920,   0);
-//        App.run("data/celegans.gexf"  , 640, 640,    0, 700);
-//        App.run("data/viz.gexf"       , 640, 640,  640, 700);
-//        App.run("data/yeast.gexf"     , 640, 640, 1280, 700);
-//        App.run("data/attrsample.gexf", 640, 640, 1920, 700);
-//        
-//        //long time = Calendar.getInstance().getTimeInMillis()+20000;
-//        //while(Calendar.getInstance().getTimeInMillis()<time);
-//    }
 
     @Test(expected= FileNotFoundException.class)
     public void badFileName() throws ParserConfigurationException, SAXException, IOException{

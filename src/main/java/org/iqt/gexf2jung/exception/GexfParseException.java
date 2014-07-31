@@ -17,10 +17,10 @@
 package org.iqt.gexf2jung.exception;
 
 /**
- *
+ * This represents a generic GEXF parsing exception. This should be overridden.
  * @author Avery Cowan
  */
-public class GexfParseException extends RuntimeException{
+public abstract class GexfParseException extends RuntimeException{
 
     /**
      * Creates a new instance of <code>GefxParseException</code> without detail

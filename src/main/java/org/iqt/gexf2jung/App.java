@@ -19,16 +19,10 @@ package org.iqt.gexf2jung;
 
 import edu.uci.ics.jung.algorithms.layout.*;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 import java.awt.Dimension;
-import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.xml.parsers.ParserConfigurationException;
 import org.iqt.gexf2jung.transformers.*;
@@ -45,7 +39,7 @@ public class App {
      * @see run(java.lang.String)
      */
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException{
-        run("data/celegans.gexf");
+        run("data/viz.gexf");
     }
     /**
      * Easy access method for <code>run(String filename, int width, int height, int x, int y)</code>. Puts the window at 0,0 with size 2560,1300.

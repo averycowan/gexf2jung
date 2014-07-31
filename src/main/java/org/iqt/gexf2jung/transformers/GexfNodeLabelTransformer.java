@@ -20,11 +20,12 @@ import org.apache.commons.collections15.Transformer;
 import org.iqt.gexf2jung.Node;
 
 /**
- *
+ * This Transformer returns <code>Node.getLabel()</code>.
  * @author Avery Cowan
  */
 public class GexfNodeLabelTransformer implements Transformer<Node, String> {
 
+    @Override
     public String transform(Node n) {
         return n.getLabel();
     }

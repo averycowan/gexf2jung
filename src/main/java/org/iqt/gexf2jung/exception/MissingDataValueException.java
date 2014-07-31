@@ -17,7 +17,7 @@
 package org.iqt.gexf2jung.exception;
 
 /**
- *
+ * This Exception is to be called if a required data value is invalid such as id in node.
  * @author Avery Cowan
  */
 public class MissingDataValueException extends GexfParseException {

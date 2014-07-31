@@ -20,13 +20,15 @@ import java.awt.BasicStroke;
 import java.awt.Stroke;
 import org.apache.commons.collections15.Transformer;
 import org.iqt.gexf2jung.Edge;
+import org.iqt.gexf2jung.exception.InvalidDataValueException;
 
 /**
- *
+ * This Transformer generates a <code>Stroke</code> from the data stored in an <code>Edge</code>.
  * @author Avery Cowan
  */
 public class GexfEdgeStrokeTransformer implements Transformer<Edge, Stroke> {
 
+    @Override
     public Stroke transform(Edge e) {
         float weight = e.getWeight();
         if (e.getStroke() == null || e.getStroke().equals("solid")) {
@@ -43,6 +45,7 @@ public class GexfEdgeStrokeTransformer implements Transformer<Edge, Stroke> {
             dash[0] = weight * 10.f;
             return new BasicStroke(weight, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
         }
-        return new BasicStroke(1.0f);
+        else
+            throw new InvalidDataValueException("Edge type "+e.getStroke()+" is not allowed. Must be solid, dotted or dashed.");
     }
 }

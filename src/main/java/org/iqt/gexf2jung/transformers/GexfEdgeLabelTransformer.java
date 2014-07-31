@@ -20,11 +20,12 @@ import org.apache.commons.collections15.Transformer;
 import org.iqt.gexf2jung.Edge;
 
 /**
- *
+ * This Transformer returns <code>Edge.getLabel()</code>.
  * @author Avery Cowan
  */
 public class GexfEdgeLabelTransformer implements Transformer<Edge, String> {
     
+    @Override
     public String transform(Edge e) {
         return e.getLabel();
     }

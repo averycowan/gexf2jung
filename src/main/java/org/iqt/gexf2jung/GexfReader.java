@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.iqt.gexf2jung;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -23,28 +22,21 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.geometry.Point3D;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.iqt.gexf2jung.exception.*;
 import org.xml.sax.Attributes;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Uses SAX to parse a GEXF file
+ *
  * @author Avery Cowan
  */
 public class GexfReader extends DefaultHandler {
@@ -66,6 +58,7 @@ public class GexfReader extends DefaultHandler {
      * @throws ParserConfigurationException
      * @throws SAXException
      * @throws IOException
+     * @return A filled JUNG SparseMultigraph from filename
      */
     public static Graph<Node, Edge> read(String filename) throws ParserConfigurationException, SAXException, IOException {
         if (!new File(filename).exists()) {
@@ -81,15 +74,17 @@ public class GexfReader extends DefaultHandler {
         xmlReader.parse(convertToFileURL(filename));
         return reader.getGraph();
     }
-    
+
     /**
-     * Accessor method to retrieve the JUNG graph once <code>read(String filename)</code> has been called.
-     * @return 
+     * Accessor method to retrieve the JUNG graph once
+     * <code>read(String filename)</code> has been called.
+     *
+     * @return
      */
     private Graph<Node, Edge> getGraph() {
         return g;
     }
-    
+
     @Override
     public void startElement(String namespaceURI,
             String localName,
@@ -141,14 +136,40 @@ public class GexfReader extends DefaultHandler {
         } else if (qName.startsWith("viz:")) {
             if (attclass == AttClass.Node) {
                 if (localName.equals("color")) {
-                    int r = Integer.parseInt(atts.getValue("r"));
-                    int g = Integer.parseInt(atts.getValue("g"));
-                    int b = Integer.parseInt(atts.getValue("b"));
+                    int r = 0, g = 0, b = 0, a = 0;
+                    if (atts.getValue("r") == null) {
+                        throw new MissingDataValueException("The \"r\" value in viz:color is missing");
+                    }
+                    if (atts.getValue("g") == null) {
+                        throw new MissingDataValueException("The \"g\" value in viz:color is missing");
+                    }
+                    if (atts.getValue("b") == null) {
+                        throw new MissingDataValueException("The \"b\" value in viz:color is missing");
+                    }
+                    try {
+                        r = Integer.parseInt(atts.getValue("r"));
+                    } catch (NumberFormatException e) {
+                        throw new InvalidDataValueException("The \"r\" value in viz:color is not an integer");
+                    }
+                    try {
+                        g = Integer.parseInt(atts.getValue("g"));
+                    } catch (NumberFormatException e) {
+                        throw new InvalidDataValueException("The \"g\" value in viz:color is not an integer");
+                    }
+                    try {
+                        b = Integer.parseInt(atts.getValue("b"));
+                    } catch (NumberFormatException e) {
+                        throw new InvalidDataValueException("The \"b\" value in viz:color is not an integer");
+                    }
                     if (atts.getValue("a") == null) {
                         cnode.setColor(new Color(r, g, b));
                     } else {
-                        int a = (int) (Float.parseFloat(atts.getValue("a")) * 255);
-                        cnode.setColor(new Color(r, g, b, a));
+                        try {
+                            a = (int) (Float.parseFloat(atts.getValue("a")) * 255);
+                            cnode.setColor(new Color(r, g, b, a));
+                        } catch (NumberFormatException e) {
+                            throw new InvalidDataValueException("The \"a\" value in viz:color is not a float");
+                        }
                     }
                 } else if (localName.equals("position")) {
                     cnode.setPosition(new Point3D(Double.parseDouble(atts.getValue("x")), Double.parseDouble(atts.getValue("y")), Double.parseDouble(atts.getValue("z"))));
@@ -180,6 +201,7 @@ public class GexfReader extends DefaultHandler {
             cedge = e;
         }
     }
+
     private static String convertToFileURL(String filename) {
         String path = new File(filename).getAbsolutePath();
         if (File.separatorChar != '/') {
@@ -195,6 +217,7 @@ public class GexfReader extends DefaultHandler {
 
 /**
  * A basic enum to store whether an attribute is for a node or an edge.
+ *
  * @author Avery Cowan
  */
 enum AttClass {

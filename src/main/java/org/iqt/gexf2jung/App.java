@@ -75,6 +75,7 @@ public class App {
         vv.getRenderContext().setEdgeStrokeTransformer(new GexfEdgeStrokeTransformer());
         vv.getRenderContext().setVertexLabelTransformer(new GexfNodeLabelTransformer());
         vv.getRenderContext().setEdgeLabelTransformer(new GexfEdgeLabelTransformer());
+        vv.getRenderContext().setEdgeDrawPaintTransformer(new GexfEdgePaintTransformer());
         vv.getRenderer().getVertexLabelRenderer().setPosition(Position.AUTO);
 
         JFrame frame = new JFrame("Graph View");

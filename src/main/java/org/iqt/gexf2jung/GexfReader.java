@@ -1,3 +1,19 @@
+/*
+ * Copyright 2014 Avery Cowan.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.iqt.gexf2jung;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -29,7 +45,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Uses SAX to parse a GEXF file
- *
  * @author Avery Cowan
  */
 public class GexfReader extends DefaultHandler {
@@ -66,18 +81,16 @@ public class GexfReader extends DefaultHandler {
         xmlReader.parse(convertToFileURL(filename));
         return reader.getGraph();
     }
-
-    public GexfReader() {
-        super();
-    }
-
+    
+    /**
+     * Accessor method to retrieve the JUNG graph once <code>read(String filename)</code> has been called.
+     * @return 
+     */
     private Graph<Node, Edge> getGraph() {
         return g;
     }
-
-    public void startDocument() throws SAXException {
-    }
-
+    
+    @Override
     public void startElement(String namespaceURI,
             String localName,
             String qName,
@@ -156,12 +169,10 @@ public class GexfReader extends DefaultHandler {
             cnode = n;
         } else if (qName.equals("edge")) {
             attclass = AttClass.Edge;
-
-            EdgeType et = EdgeType.UNDIRECTED;//.valueOf(defaultDirection);
             Edge e = new Edge(atts.getValue("id"));
             if (atts.getValue("weight") != null) {
                 if (Float.parseFloat(atts.getValue("weight")) < 0) {
-                    throw new InvalidDataValueException("Edge weight must be >= 0. Weight was " + atts.getValue("weight") + ".");
+                    throw new InvalidDataValueException("Edge weight must be >= 0.Value was " + atts.getValue("weight") + ".");
                 }
                 e.setWeight(Float.parseFloat(atts.getValue("weight")));
             }
@@ -169,10 +180,6 @@ public class GexfReader extends DefaultHandler {
             cedge = e;
         }
     }
-
-    public void endDocument() throws SAXException {
-    }
-
     private static String convertToFileURL(String filename) {
         String path = new File(filename).getAbsolutePath();
         if (File.separatorChar != '/') {
@@ -186,42 +193,10 @@ public class GexfReader extends DefaultHandler {
     }
 }
 
-class MyErrorHandler implements ErrorHandler {
-
-    private PrintStream out;
-
-    MyErrorHandler(PrintStream out) {
-        this.out = out;
-    }
-
-    private String getParseExceptionInfo(SAXParseException spe) {
-        String systemId = spe.getSystemId();
-
-        if (systemId == null) {
-            systemId = "null";
-        }
-
-        String info = "URI=" + systemId + " Line="
-                + spe.getLineNumber() + ": " + spe.getMessage();
-
-        return info;
-    }
-
-    public void warning(SAXParseException spe) throws SAXException {
-        out.println("Warning: " + getParseExceptionInfo(spe));
-    }
-
-    public void error(SAXParseException spe) throws SAXException {
-        String message = "Error: " + getParseExceptionInfo(spe);
-        throw new SAXException(message);
-    }
-
-    public void fatalError(SAXParseException spe) throws SAXException {
-        String message = "Fatal Error: " + getParseExceptionInfo(spe);
-        throw new SAXException(message);
-    }
-}
-
+/**
+ * A basic enum to store whether an attribute is for a node or an edge.
+ * @author Avery Cowan
+ */
 enum AttClass {
 
     Node, Edge

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2014 Avery Cowan.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.iqt.gexf2jung;
 
 
@@ -24,22 +40,36 @@ import org.xml.sax.SAXException;
  * @author Avery Cowan
  */
 public class App {
-    private static int count = 0;
-    //private final Transformer DEFAULT_SHAPE = new BasicVisualizationServer(new CircleLayout(new SparseMultigraph())).getRenderContext().getVertexShapeTransformer();
-    public static final Shape defaultShape(){
-        return new Ellipse2D.Float(-10, -10, 20, 20);//((float)-10.0, (float)-10.0, (float)20.0, (float)20.0);
-    }
-    public static final float defaultSize = 20;
-    public static void main(String[] args) throws Exception {
+    /**
+     * This method calls the <code>run(String filename)</code> method on "data/celegans.gexf", a sample file.
+     * @see run(java.lang.String)
+     */
+    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException{
         run("data/celegans.gexf");
     }
+    /**
+     * Easy access method for <code>run(String filename, int width, int height, int x, int y)</code>. Puts the window at 0,0 with size 2560,1300.
+     * @param filename Passes this on
+     * 
+     */
     public static void run(String filename) throws ParserConfigurationException, SAXException, IOException{
         run(filename, 2560, 1300, 0, 0);
     }
+    /**
+     * This method runs the necessary calls to generate a JUNG visualizer with a GEXF file.
+     * Uses a graph from <code>GexfReader(String filename)</code> and Transformers from <code>org.iqt.gexf2jung.transformers</code> to make a <code>BasicVisualizationServer</code>.
+     * @param filename This must be acceptable by the constructor <code>File(filename)</code>
+     * @param width The width of the window
+     * @param height The height of the window
+     * @param x the X coordinate of the window's position
+     * @param y the Y coordinate of the window's position
+     * @throws ParserConfigurationException see <code>GexfReader.read(String filename)</code>
+     * @throws SAXException see <code>GexfReader.read(String filename)</code>
+     * @throws IOException Called if the filename is not valid.
+     * @see GexfReader
+     */
     public static void run(String filename, int width, int height, int x, int y) throws ParserConfigurationException, SAXException, IOException{
         Graph<Node, Edge> g = GexfReader.read(filename);
-        //SimpleGraphView sgv = new SimpleGraphView(); //We create our graph in here
-        // The Layout<V, E> is parameterized by the vertex and edge types
         Layout<Node, Edge> layout = new FRLayout2<Node, Edge>(g);
         layout.setSize(new Dimension(width, height)); // sets the initial size of the space
         // The BasicVisualizationServer<V,E> is parameterized by the edge types
